@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
+import { useRouter } from 'next/navigation'
 
 interface Answer {
   id: number
@@ -25,45 +26,74 @@ export default function SkinQuiz() {
   const [currentStep, setCurrentStep] = useState(0) // Track current step
   const [answers, setAnswers] = useState<string[]>([]) // Store answers for each question
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]) // Store quiz questions
+  const router = useRouter() // For redirection
 
-  // Fetch quiz data from API
+  // Fetch quiz data from API and start quiz
   useEffect(() => {
-    async function fetchQuizData() {
+    async function startQuiz() {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/v1/quiz/quizzes/');
-        const data = await response.json();
-        if (data.length > 0) {
-          setQuizQuestions(data[0].questions); // Assuming you want the first quiz
-          setAnswers(new Array(data[0].questions.length).fill('')); // Initialize answers
+        // Call the API to start the quiz
+        const startResponse = await fetch('http://127.0.0.1:8000/api/v1/quiz/user-quizzes/1/start_quiz/', {
+          method: 'POST',
+        });
+
+        if (startResponse.ok) {
+          const response = await fetch('http://127.0.0.1:8000/api/v1/quiz/quizzes/');
+          const data = await response.json();
+          if (data.length > 0) {
+            setQuizQuestions(data[0].questions); // Assuming you want the first quiz
+            setAnswers(new Array(data[0].questions.length).fill('')); // Initialize answers
+          }
+        } else {
+          console.error("Failed to start quiz:", startResponse.statusText);
         }
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       }
     }
-    fetchQuizData();
-  }, [])
+
+    startQuiz();
+  }, []);
 
   const handleAnswer = (answer: string) => {
-    const updatedAnswers = [...answers]
-    updatedAnswers[currentStep] = answer // Save the selected answer
-    setAnswers(updatedAnswers)
-  }
+    const updatedAnswers = [...answers];
+    updatedAnswers[currentStep] = answer; // Save the selected answer
+    setAnswers(updatedAnswers);
+  };
 
   const nextQuestion = () => {
     if (currentStep < quizQuestions.length - 1) {
-      setCurrentStep(currentStep + 1)
-    } else {
-      console.log("Quiz completed!", answers)
+      setCurrentStep(currentStep + 1);
     }
-  }
+  };
 
   const previousQuestion = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
+      setCurrentStep(currentStep - 1);
     }
-  }
+  };
 
-  const currentQuestion = quizQuestions[currentStep] || { question_text: '', answers: [] }
+  const finishQuiz = async () => {
+    try {
+      // Call the API to complete the quiz
+      const finishResponse = await fetch('http://127.0.0.1:8000/api/v1/quiz/user-quizzes/2/complete_quiz/', {
+        method: 'POST',
+      });
+
+      if (finishResponse.ok) {
+        console.log("Quiz completed!", answers);
+
+        // Redirect to the recommendations page
+        router.push('/product-recommendation');
+      } else {
+        console.error("Failed to complete quiz:", finishResponse.statusText);
+      }
+    } catch (error) {
+      console.error("Error completing quiz:", error);
+    }
+  };
+
+  const currentQuestion = quizQuestions[currentStep] || { question_text: '', answers: [] };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white flex items-center justify-center px-4">
@@ -104,18 +134,18 @@ export default function SkinQuiz() {
             </Button>
           )}
 
-          {/* Next Button */}
+          {/* Next or Finish Button */}
           {currentStep < quizQuestions.length - 1 ? (
             <Button variant="secondary" onClick={nextQuestion}>
               Next
             </Button>
           ) : (
-            <Button variant="default" onClick={() => console.log("Quiz completed!", answers)}>
+            <Button variant="default" onClick={finishQuiz}>
               Finish Quiz
             </Button>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
