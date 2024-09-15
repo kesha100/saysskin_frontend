@@ -44,7 +44,7 @@ export default function MainPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between">
           <div className="md:w-1/2 mb-8 md:mb-0">
             <Image
-              src="/placeholder.svg?height=400&width=400"
+              src="/unsplash.png?height=400&width=400"
               alt="Abstract skincare product"
               width={400}
               height={400}

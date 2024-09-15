@@ -8,7 +8,7 @@ interface Product {
   name: string
   price: string
   link: string
-  image: string
+  image: string | null  // Allow for the possibility of null
   step: string
 }
 
@@ -19,12 +19,18 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => (
   <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
     <div className="relative h-48">
-      <Image
-        src={product.image}
-        alt={product.name}
-        fill
-        className="object-contain p-4"
-      />
+      {product.image ? (
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-contain p-4"
+        />
+      ) : (
+        <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+          <span>No image available</span>
+        </div>
+      )}
     </div>
     <div className="p-4 text-center">
       <h3 className="font-semibold text-lg mb-2 text-gray-800">{product.step}</h3>
@@ -56,9 +62,8 @@ export function ProductRecommendationsComponent() {
           throw new Error('Failed to fetch data')
         }
         const data = await response.json()
-        // Assume the data includes morning and night routines
-        setMorningRoutine(data.morningRoutine)
-        setNightRoutine(data.nightRoutine)
+        setMorningRoutine(data.morning_routine || [])  // Set to empty array if undefined
+        setNightRoutine(data.night_routine || [])  // Set to empty array if undefined
         setIsLoading(false)
       } catch (error) {
         setError('An error occurred while fetching the data. Please try again later.')
@@ -97,18 +102,26 @@ export function ProductRecommendationsComponent() {
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Morning Routine</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {morningRoutine.map((product, index) => (
-              <ProductCard key={index} product={product} />
-            ))}
+            {morningRoutine?.length > 0 ? (
+              morningRoutine.map((product, index) => (
+                <ProductCard key={index} product={product} />
+              ))
+            ) : (
+              <p>No products found for the morning routine.</p>
+            )}
           </div>
         </div>
 
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Night Routine</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {nightRoutine.map((product, index) => (
-              <ProductCard key={index} product={product} />
-            ))}
+            {nightRoutine?.length > 0 ? (
+              nightRoutine.map((product, index) => (
+                <ProductCard key={index} product={product} />
+              ))
+            ) : (
+              <p>No products found for the night routine.</p>
+            )}
           </div>
         </div>
       </div>
