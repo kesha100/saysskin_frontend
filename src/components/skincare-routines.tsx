@@ -28,7 +28,7 @@ interface RoutineData {
 const navItems = [
   { name: "Take a Quiz", href: "/quiz" },
   { name: "Product Scanner", href: "/product-scanner" },
-  { name: "Skin Guide", href: "/guide" },
+  { name: "Skin Guide", href: "skin-basics" },
   { name: "AI Dermatologist", href: "/" }
 ];
 
