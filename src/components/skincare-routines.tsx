@@ -25,6 +25,14 @@ interface RoutineData {
   night_routine: Product[]
 }
 
+const navItems = [
+  { name: "Take a Quiz", href: "/quiz" },
+  { name: "Product Scanner", href: "/product-scanner" },
+  { name: "Skin Guide", href: "/guide" },
+  { name: "AI Dermatologist", href: "/" }
+];
+
+
 export function SkincareRoutines() {
   const [routines, setRoutines] = useState<RoutineData | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -38,17 +46,24 @@ export function SkincareRoutines() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch('https://saysskin.onrender.com/api/v1/quiz/user-quizzes/2/recommend_products/')
-        if (!response.ok) {
-          throw new Error('Failed to fetch data')
+      const storedData = localStorage.getItem('skincareRoutines')
+      if (storedData) {
+        setRoutines(JSON.parse(storedData))
+        setIsLoading(false)
+      } else {
+        try {
+          const response = await fetch('https://saysskin.onrender.com/api/v1/quiz/user-quizzes/2/recommend_products/')
+          if (!response.ok) {
+            throw new Error('Failed to fetch data')
+          }
+          const data = await response.json()
+          setRoutines(data)
+          localStorage.setItem('skincareRoutines', JSON.stringify(data))
+          setIsLoading(false)
+        } catch (error) {
+          setError('An error occurred while fetching the data. Please try again later.')
+          setIsLoading(false)
         }
-        const data = await response.json()
-        setRoutines(data)
-        setIsLoading(false)
-      } catch (error) {
-        setError('An error occurred while fetching the data. Please try again later.')
-        setIsLoading(false)
       }
     }
 
@@ -62,7 +77,11 @@ export function SkincareRoutines() {
   }
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#D1C6F3] via-[#E9BCAC] to-[#BEA8F1]">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+      </div>
+    )
   }
 
   if (error) {
@@ -76,6 +95,7 @@ export function SkincareRoutines() {
     )
   }
 
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#D1C6F3] via-[#E9BCAC] to-[#BEA8F1] animate-gradient-x">
       <div className="absolute inset-0 bg-gradient-to-tr from-blue-400/30 to-blue-600/30 pointer-events-none"></div>
@@ -85,13 +105,14 @@ export function SkincareRoutines() {
             SAYS
           </Link>
           <div className="hidden md:flex space-x-2">
-            {["Take a Quiz", "Face Scanner", "Skin Guide", "AI Dermatologist"].map((item) => (
-              <Button
-                key={item}
-                className="bg-white text-black rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 text-xs px-3 py-1 h-8"
-              >
-                {item}
-              </Button>
+            {navItems.map((item) => (
+              <Link key={item.name} href={item.href}>
+                <Button
+                  className="bg-white text-black rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-purple-500 hover:text-white text-xs px-3 py-1 h-8"
+                >
+                  {item.name}
+                </Button>
+              </Link>
             ))}
           </div>
         </div>
@@ -119,7 +140,7 @@ export function SkincareRoutines() {
       
       <div className="flex-grow container mx-auto px-4 py-8 relative z-10">
         <h1 className="text-xl md:text-2xl font-bold text-white mb-8 text-center">
-          Based on your quiz results, we've made a personalized skincare routine just for you!
+          Based on your quiz results, AI made a personalized skincare routine just for you!
         </h1>
         
         <div className="grid md:grid-cols-2 gap-8 mb-8">

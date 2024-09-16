@@ -56,7 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, setSelectedProduct }
             <DialogHeader>
               <DialogTitle>{product.name}</DialogTitle>
             </DialogHeader>
-            <p>Price: ${product.price}</p>
+            <p>Price: {product.price}</p>
             <Button asChild>
               <a href="#" target="_blank" rel="noopener noreferrer">
                 Go to Store
