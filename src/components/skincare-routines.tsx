@@ -162,16 +162,18 @@ export function SkincareRoutines() {
           </div>
         </div>
 
-        <div className="mt-8 text-center bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4">
-          <p className="text-white text-lg mb-4">Would you like to save your routine?</p>
-          <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-white text-black hover:bg-gray-200">
-                Save
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
+        <div className="mt-8 text-center bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-6 shadow-lg">
+      <p className="text-white text-2xl font-bold mb-6 animate-pulse">
+        Would you like to save your routine?
+      </p>
+      <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
+        <DialogTrigger asChild>
+          <Button className="bg-white text-black hover:bg-yellow-300 transition-colors duration-300 transform hover:scale-105 font-semibold px-6 py-3 rounded-full shadow-md">
+            Save
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
                 <DialogTitle>Sign In to Save Your Routine</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSave}>

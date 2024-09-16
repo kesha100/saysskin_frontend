@@ -10,6 +10,13 @@ import { Home, Camera, Microscope, Loader2 } from "lucide-react"
 interface AnalysisResult {
   description: string;
 }
+const navItems = [
+  { name: "Take a Quiz", href: "/quiz" },
+  { name: "Product Scanner", href: "/product-scanner" },
+  { name: "Skin Guide", href: "skin-basics" },
+  { name: "AI Dermatologist", href: "/" }
+];
+
 
 export default function ProductAnalysisScanner() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -82,27 +89,28 @@ export default function ProductAnalysisScanner() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#D1C6F3] via-[#E9BCAC] to-[#BEA8F1] animate-gradient-x">
-      <div className="absolute inset-0 bg-gradient-to-tr from-blue-400/30 to-blue-600/30 pointer-events-none"></div>
-      <nav className="bg-white bg-opacity-10 backdrop-blur-md relative z-10">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex space-x-2">
-            {["Take a Quiz", "Face Scanner", "Skin Guide", "AI Dermatologist"].map((item) => (
-              <Button
-                key={item}
-                className="bg-blue-500 bg-opacity-20 hover:bg-opacity-30 text-white border border-blue-300 border-opacity-50 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 text-xs px-3 py-1"
-              >
-                {item}
-              </Button>
-            ))}
+      <header className="bg-white bg-opacity-10 backdrop-blur-md sticky top-0 z-50">
+        <nav className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="text-2xl font-bold text-white hover:text-purple-200 transition-colors">
+              SAYS
+            </Link>
+            <div className="hidden md:flex space-x-2">
+              {navItems.map((item) => (
+                <Link key={item.name} href={item.href}>
+                  <Button
+                    variant="ghost"
+                    className="text-white hover:text-purple-200 hover:bg-white hover:bg-opacity-10 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
+                  >
+                    {/* {item.icon && <item.icon className="w-4 h-4 mr-2" />} */}
+                    {item.name}
+                  </Button>
+                </Link>
+              ))}
+            </div>
           </div>
-          <Link href="/" className="text-2xl font-bold text-white bg-blue-500 bg-opacity-20 hover:bg-opacity-30 border border-blue-300 border-opacity-50 rounded-full px-6 py-2 transition-all duration-300 ease-in-out transform hover:scale-105">
-            SAYS
-          </Link>
-          <Button className="bg-blue-500 bg-opacity-20 hover:bg-opacity-30 text-white border border-blue-300 border-opacity-50 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 p-2">
-            <Home className="w-5 h-5" />
-          </Button>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       <div className="flex-grow container mx-auto px-4 py-8 relative z-10">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Product Analysis Scanner</h1>
