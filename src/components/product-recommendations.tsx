@@ -58,7 +58,7 @@ export function ProductRecommendationsComponent() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/v1/quiz/user-quizzes/2/recommend_products/')
+        const response = await fetch('https://saysskin.onrender.com/api/v1/quiz/user-quizzes/2/recommend_products/')
         if (!response.ok) {
           throw new Error('Failed to fetch data')
         }

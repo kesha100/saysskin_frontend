@@ -31,12 +31,12 @@ export default function SkinQuiz() {
   useEffect(() => {
     async function startQuiz() {
       try {
-        const startResponse = await fetch('http://127.0.0.1:8000/api/v1/quiz/user-quizzes/1/start_quiz/', {
+        const startResponse = await fetch('https://saysskin.onrender.com/api/v1/quiz/user-quizzes/1/start_quiz/', {
           method: 'POST',
         });
 
         if (startResponse.ok) {
-          const response = await fetch('http://127.0.0.1:8000/api/v1/quiz/quizzes/');
+          const response = await fetch('https://saysskin.onrender.com/api/v1/quiz/quizzes/');
           const data = await response.json();
           if (data.length > 0) {
             setQuizQuestions(data[0].questions);
@@ -73,7 +73,7 @@ export default function SkinQuiz() {
 
   const finishQuiz = async () => {
     try {
-      const finishResponse = await fetch('http://127.0.0.1:8000/api/v1/quiz/user-quizzes/2/complete_quiz/', {
+      const finishResponse = await fetch('https://saysskin.onrender.com/api/v1/quiz/user-quizzes/2/complete_quiz/', {
         method: 'POST',
       });
 
